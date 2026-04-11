@@ -1,4 +1,3 @@
-/*
 [rewrite_local]
 ^https://mp.jxnewbook.cn/api/additional-server/v1/pay/member/status url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
 ^https://mp.jxnewbook.cn/api/newbook-user-center/v1/thirdpartyUser/getByOpenId url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
