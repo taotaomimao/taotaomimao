@@ -2,6 +2,7 @@
 [rewrite_local]
 ^https:\/\/mp\.jxnewbook\.cn\/api\/additional-server\/v1\/pay\/member\/status url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
 ^https:\/\/mp\.jxnewbook\.cn\/api\/newbook-user-center\/v1\/user\/current url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
+^https:\/\/mp\.jxnewbook\.cn\/api\/insurance-server\/v1\/invest\/lap url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
 
 [mitm]
 hostname = mp.jxnewbook.cn
@@ -33,6 +34,11 @@ try {
     }
 
     if (url.indexOf("user/current") !== -1 && obj.data) {
+        obj.data.groupId = "1";
+        if (obj.data.teamList && obj.data.teamList.length > 0) {
+            obj.data.teamList[0].groupId = "1";
+            obj.data.teamList[0].userStatus = 1;
+        }
         var ms = obj.data.memberStatus;
         if (ms) {
             ms.status = 1;
@@ -50,6 +56,12 @@ try {
             }
         }
         console.log("✅ user/current 修改成功");
+    }
+
+    if (url.indexOf("invest/lap") !== -1) {
+        obj.errcode = 200;
+        obj.errmsg = "成功";
+        console.log("✅ invest/lap 修改成功");
     }
 
     body = JSON.stringify(obj);
