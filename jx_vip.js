@@ -1,7 +1,7 @@
 /*
 [rewrite_local]
 ^https:\/\/mp\.jxnewbook\.cn\/api\/additional-server\/v1\/pay\/member\/status url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
-^https:\/\/mp\.jxnewbook\.cn\/api\/newbook-user-center\/v1\/thirdpartyUser\/getByOpenId url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
+^https:\/\/mp\.jxnewbook\.cn\/api\/newbook-user-center\/v1\/user\/current url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
 
 [mitm]
 hostname = mp.jxnewbook.cn
@@ -32,9 +32,24 @@ try {
         console.log("✅ member/status 修改成功");
     }
 
-    if (url.indexOf("getByOpenId") !== -1 && obj.data) {
-        obj.data.groupId = 1;
-        console.log("✅ groupId 修改成功");
+    if (url.indexOf("user/current") !== -1 && obj.data) {
+        var ms = obj.data.memberStatus;
+        if (ms) {
+            ms.status = 1;
+            ms.status_text = "已生效";
+            ms.effect_to = 4070880000000;
+            ms.vip_time_type = 10;
+            ms.vip_payment_type = true;
+            if (ms.memberships && ms.memberships.length > 0) {
+                ms.memberships[0].effect_to = 4070880000000;
+                ms.memberships[0].effect_days = 30;
+                ms.memberships[0].result = 1;
+                ms.memberships[0].level = 10;
+                ms.memberships[0].payment = 22;
+                ms.memberships[0].cppid = 1;
+            }
+        }
+        console.log("✅ user/current 修改成功");
     }
 
     body = JSON.stringify(obj);
