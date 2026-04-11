@@ -1,20 +1,19 @@
-/*
 [rewrite_local]
 ^https://mp.jxnewbook.cn/api/additional-server/v1/pay/member/status url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
 ^https://mp.jxnewbook.cn/api/newbook-user-center/v1/thirdpartyUser/getByOpenId url script-response-body https://raw.githubusercontent.com/taotaomimao/taotaomimao/main/jx_vip.js
 
 [mitm]
 hostname = mp.jxnewbook.cn
+*
+*
 */
 
 var url = $request.url;
 
-// 增加安全检查：确保有响应体才进行解析
 if ($response.body) {
     try {
         var obj = JSON.parse($response.body);
 
-        // 处理会员状态接口
         if (url.indexOf("member/status") !== -1) {
             if (obj && obj.data) {
                 var d = obj.data;
@@ -35,7 +34,6 @@ if ($response.body) {
             }
         }
 
-        // 处理用户 ID 接口
         if (url.indexOf("getByOpenId") !== -1) {
             if (obj && obj.data) {
                 obj.data.groupId = 1;
@@ -45,8 +43,8 @@ if ($response.body) {
         $done({ body: JSON.stringify(obj) });
     } catch (e) {
         console.log("脚本执行异常: " + e);
-        $done({}); // 发生解析错误时，返回原始数据，不阻塞请求
+        $done({});
     }
 } else {
-    $done({}); // 没有响应体，直接跳过
+    $done({});
 }
